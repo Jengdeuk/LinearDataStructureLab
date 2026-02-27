@@ -1,44 +1,65 @@
 #include "Container/Queue.h"
 #include "Container/Stack.h"
 
+#include "Core/Input.h"
+
 #include <iostream>
+
+static const int commandCount = 5;
+static const char commandKey[commandCount] = { 'A', 'B', 'C', 'D', 'E' };
 
 int main()
 {
-	Queue<int, 5> commandQueue;
+	Queue<char> commandQueue;
+	Stack<char> undoStack;
+	Stack<char> redoStack;
 
-	commandQueue.Push(1);
-	commandQueue.Push(2);
-	commandQueue.Push(3);
-	commandQueue.Push(4);
-	commandQueue.Push(5);
-	commandQueue.Push(6);
+	char inputBuffer[10] = {};
+	while (true)
+	{
+		Input::Instance().ProcessInput();
 
-	commandQueue.Pop();
-	commandQueue.Pop();
+		bool hasCommandInput = false;
+		for (int i = 0; i < commandCount; ++i)
+		{
+			if (Input::Instance().GetKeyDown(commandKey[i]))
+			{
+				hasCommandInput = true;
 
-	commandQueue.Push(6);
-	commandQueue.Push(6);
+				commandQueue.Push(commandKey[i]);
+				undoStack.Push(commandQueue.Front());
+				commandQueue.Pop();
 
-	//char inputBuffer[10] = {};
-	//while (true)
-	//{
-	//	std::cin >> inputBuffer;
-	//	if (strlen(inputBuffer) == 1)
-	//	{
-	//		commandQueue.Push(inputBuffer[0]);
-	//	}
-	//	else if (strcmp(inputBuffer, "undo") == 0)
-	//	{
+				redoStack.Clear();
+			}
+		}
+		
+		if (!hasCommandInput)
+		{
+			if (!undoStack.IsEmpty() && Input::Instance().GetKeyDown('U'))
+			{
+				hasCommandInput = true;
+				redoStack.Push(undoStack.Top());
+				undoStack.Pop();
+			}
+			else if (!redoStack.IsEmpty() && Input::Instance().GetKeyDown('R'))
+			{
+				hasCommandInput = true;
+				undoStack.Push(redoStack.Top());
+				redoStack.Pop();
+			}
+		}
 
-	//	}
-	//	else if (strcmp(inputBuffer, "redo") == 0)
-	//	{
+		Input::Instance().SavePreviousInputStates();
 
-	//	}
-	//	else if (strcmp(inputBuffer, "show") == 0)
-	//	{
-
-	//	}
-	//}
+		if (hasCommandInput)
+		{
+			system("cls");
+			std::cout << "Undo=";
+			undoStack.Show();
+			std::cout << ", Redo=";
+			redoStack.Show();
+			std::cout << '\n';
+		}
+	}
 }

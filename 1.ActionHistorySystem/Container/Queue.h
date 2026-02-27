@@ -4,14 +4,14 @@ template <typename T, int capacity = 10>
 class Queue
 {
 public:
-	void Push(const T& newData)
+	void Push(const T& value)
 	{
 		if (IsFull())
 		{
 			return;
 		}
 
-		data[rear] = newData;
+		data[rear] = value;
 
 		rear = (rear + 1) % (capacity + 1);
 	}
@@ -30,7 +30,7 @@ public:
 	{
 		if (IsEmpty())
 		{
-			return T();
+			return T{};
 		}
 
 		return data[front];
@@ -55,6 +55,12 @@ public:
 		}
 
 		return (front < rear) ? rear - front : rear + (capacity + 1) - front;
+	}
+
+	void Clear()
+	{
+		front = 0;
+		rear = 0;
 	}
 
 private:
