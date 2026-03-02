@@ -18,6 +18,9 @@
     <ClInclude Include="Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Container\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Input.cpp">
