@@ -9,21 +9,25 @@ static const int commandCount = 5;
 static const char commandKey[commandCount] = { 'A', 'B', 'C', 'D', 'E' };
 
 Queue<char> commandQueue;
-Stack<char> undoStack;
-Stack<char> redoStack;
+Stack<char, 30> undoStack;
+Stack<char, 30> redoStack;
 
 void Print()
 {
 	system("cls");
 
-	std::cout << "KeyInfo: Quit{ Q }, Command{ A, B, C, D, E }, Undo{ U }, Redo{ R }\n\n";
-	// 새로운 커멘드 입력시 Redo 스택 초기화
+	std::cout << "> Action Histroy System\n\n";
 	
 	std::cout << "Undo=";
 	undoStack.Show();
 	std::cout << ", Redo=";
 	redoStack.Show();
-	std::cout << '\n';
+	std::cout << "\n\n";
+
+	std::cout << "Command: { A, B, C, D, E }\n";
+	std::cout << "Undo: { U }, Redo: { R }\n";
+	std::cout << "Quit: { Q }\n\n";
+	// 새로운 커멘드 입력시 Redo 스택 초기화
 }
 
 bool Run()
